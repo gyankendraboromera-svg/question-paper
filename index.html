@@ -3,32 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bilingual SEBA Question Paper Generator - Mali Sir</title>
+    <title>Custom Section SEBA Question Paper Generator - Mali Sir</title>
     <style>
         * { box-sizing: border-box; }
         body { font-family: 'Noto Sans Bengali', 'Segoe UI', Arial, sans-serif; background: #eef2f6; margin: 0; padding: 15px; color: #1e293b; }
         
         /* Editor Panel */
-        .editor-panel { max-width: 920px; margin: 0 auto 25px; background: #ffffff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border-top: 5px solid #1e3c72; }
+        .editor-panel { max-width: 940px; margin: 0 auto 25px; background: #ffffff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border-top: 5px solid #1e3c72; }
         .editor-panel h2 { margin-top: 0; color: #1e3c72; font-size: 19px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
         .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin-bottom: 12px; }
-        .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; margin-bottom: 10px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-bottom: 10px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(135px, 1fr)); gap: 8px; margin-bottom: 10px; }
         label { font-size: 13px; font-weight: 600; color: #475569; display: block; margin-bottom: 4px; }
         input, select, textarea { width: 100%; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; font-family: inherit; }
         .eng-input { background: #f0fdf4; border-color: #86efac; margin-top: 4px; font-size: 13px; }
         .sub-box { background: #f8fafc; border: 1px dashed #94a3b8; padding: 12px; border-radius: 8px; margin-bottom: 12px; }
+        .sec-builder-box { background: #eff6ff; border: 1.5px solid #93c5fd; padding: 12px; border-radius: 8px; margin-bottom: 15px; }
         .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
         button { padding: 10px 15px; border: none; border-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-sec { background: #2563eb; color: #fff; }
         .btn-trans { background: #0284c7; color: #fff; }
-        .btn-trans:hover { background: #0369a1; }
         .btn-add { background: #1e3c72; color: #fff; }
         .btn-print { background: #16a34a; color: #fff; }
         .btn-ans { background: #d97706; color: #fff; }
         .btn-clear { background: #dc2626; color: #fff; }
-        .del-q-btn { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; padding: 2px 8px; font-size: 12px; border-radius: 4px; margin-left: 8px; cursor: pointer; }
+        .del-btn { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; padding: 2px 7px; font-size: 11px; border-radius: 4px; margin-left: 8px; cursor: pointer; }
 
         /* A4 Question Paper */
-        .a4-paper { max-width: 920px; margin: 0 auto; background: #ffffff; padding: 30px 35px; box-shadow: 0 5px 20px rgba(0,0,0,0.12); min-height: 1120px; }
+        .a4-paper { max-width: 940px; margin: 0 auto; background: #ffffff; padding: 30px 35px; box-shadow: 0 5px 20px rgba(0,0,0,0.12); min-height: 1120px; }
         .paper-header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 15px; }
         .paper-header h1 { margin: 0; font-size: 20px; text-transform: uppercase; color: #000; font-family: Arial, sans-serif; }
         .paper-header p.sub { margin: 3px 0; font-size: 14px; font-weight: 600; color: #222; }
@@ -38,8 +40,11 @@
         .meta-row { display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .meta-row span { white-space: nowrap; }
         
-        .section-title { font-size: 15px; font-weight: bold; text-decoration: underline; margin: 18px 0 12px; text-align: center; }
-        .q-item { margin-bottom: 16px; font-size: 14.5px; line-height: 1.5; page-break-inside: avoid; }
+        /* Section Header with Marks Formula */
+        .sec-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #000; padding-bottom: 4px; margin: 20px 0 12px; font-size: 15px; font-weight: bold; }
+        .sec-formula { font-family: Arial, sans-serif; white-space: nowrap; }
+
+        .q-item { margin-bottom: 15px; font-size: 14.5px; line-height: 1.5; page-break-inside: avoid; }
         .q-top { display: flex; justify-content: space-between; align-items: flex-start; }
         .q-text { flex: 1; }
         .q-eng-text { display: block; color: #111; margin-top: 2px; font-size: 14px; }
@@ -57,7 +62,7 @@
 
         @media print {
             body { background: #fff; padding: 0; }
-            .editor-panel, .del-q-btn { display: none !important; }
+            .editor-panel, .del-btn { display: none !important; }
             .a4-paper { box-shadow: none; padding: 10mm 12mm; margin: 0; width: 100%; max-width: 100%; }
         }
     </style>
@@ -66,11 +71,11 @@
 
     <div class="editor-panel">
         <h2>
-            <span>📝 দ্বিভাষিক SEBA প্ৰশ্নকাকত প্ৰস্তুতকাৰী (Assamese + English)</span>
-            <span style="font-size: 14px; background: #e0e7ff; color: #1e3c72; padding: 5px 10px; border-radius: 6px;">Added Marks: <span id="calc-marks">0</span></span>
+            <span>📝 SEBA প্ৰশ্নকাকত প্ৰস্তুতকাৰী (Custom Sections & Marks)</span>
+            <span style="font-size: 13.5px; background: #e0e7ff; color: #1e3c72; padding: 5px 10px; border-radius: 6px;">Sections Total: <span id="sec-total-badge">0</span></span>
         </h2>
 
-        <!-- Header Details (English) -->
+        <!-- 1. Header Details -->
         <div class="grid-2">
             <div>
                 <label>Institute / School Name</label>
@@ -113,37 +118,62 @@
                 <input type="text" id="exam-time" value="3 Hours" oninput="updateHeader()">
             </div>
             <div>
-                <label>Full Marks (ইয়াত লিখক)</label>
-                <input type="number" id="manual-full-marks" value="90" placeholder="Auto" oninput="updateHeader()">
+                <label>Full Marks (নিজে লিখক বা Auto)</label>
+                <input type="number" id="manual-full-marks" placeholder="Auto (Sections Sum)" oninput="updateHeader()">
             </div>
         </div>
 
-        <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 15px 0;">
+        <!-- 2. Custom Section Creator (e.g., 1 x 25 = 25, 2 x 5 = 10) -->
+        <div class="sec-builder-box">
+            <label style="color:#1e3c72; font-size:14px; margin-bottom:8px;">📂 নতুন বিভাগ তৈয়াৰ কৰক (Create Custom Section & Marks Formula):</label>
+            <div class="grid-4">
+                <div style="grid-column: span 2;">
+                    <label>বিভাগৰ নাম (Section Title)</label>
+                    <input type="text" id="new-sec-title" placeholder="যেনে: Section - A (Multiple Choice Questions)">
+                </div>
+                <div>
+                    <label>প্ৰতিটো প্ৰশ্নৰ নম্বৰ (Marks)</label>
+                    <input type="number" id="new-sec-each" value="1" min="1" oninput="previewSecFormula()">
+                </div>
+                <div>
+                    <label>মুঠ প্ৰশ্নৰ সংখ্যা (Count)</label>
+                    <input type="number" id="new-sec-count" value="25" min="1" oninput="previewSecFormula()">
+                </div>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                <span style="font-size:13px; font-weight:bold; color:#1e40af;">হিসাপ (Formula Preview): <span id="formula-preview">1 × 25 = 25</span></span>
+                <button class="btn-sec" onclick="addSection()">➕ নতুন Section যোগ কৰক</button>
+            </div>
+        </div>
 
-        <!-- Question Type & Marks -->
-        <div class="grid-2">
+        <!-- 3. Question Entry Form -->
+        <div class="grid-3">
             <div>
-                <label>প্ৰশ্নৰ ধৰণ বাছনি কৰক (Question Format)</label>
+                <label>কোনটো Section-ত যোগ কৰিব?</label>
+                <select id="target-sec-select"></select>
+            </div>
+            <div>
+                <label>প্ৰশ্নৰ ধৰণ (Question Format)</label>
                 <select id="q-type" onchange="switchFormFields()">
                     <option value="mcq">১. সাধাৰণ MCQ (A, B, C, D)</option>
-                    <option value="matching">২. 'অ' অংশৰ লগত 'আ' অংশ মিলোৱা (Matching + A, B, C, D)</option>
-                    <option value="assertion">৩. বিবৃতি আৰু কাৰণ (Assertion & Reasoning)</option>
-                    <option value="desc">৪. চমু / দীঘল প্ৰশ্ন (2, 3, 4, 5 Marks বা 1+2)</option>
+                    <option value="matching">২. স্তম্ভ মিলোৱা (Matching + A,B,C,D)</option>
+                    <option value="assertion">৩. বিবৃতি-কাৰণ (Assertion-Reason)</option>
+                    <option value="desc">৪. চমু / দীঘল প্ৰশ্ন (Descriptive)</option>
                 </select>
             </div>
             <div>
-                <label>নম্বৰ বাছনি কৰক (Marks / Split Marks)</label>
+                <label>প্ৰশ্নৰ কাষৰ নম্বৰ (Marks / Split)</label>
                 <select id="marks-select" onchange="handleMarksSelect()">
-                    <option value="1">1 Mark</option>
-                    <option value="2">2 Marks</option>
-                    <option value="3">3 Marks</option>
-                    <option value="4">4 Marks</option>
-                    <option value="5">5 Marks</option>
-                    <option value="1+2">1 + 2 = 3 Marks</option>
-                    <option value="2+2">2 + 2 = 4 Marks</option>
-                    <option value="2+3">2 + 3 = 5 Marks</option>
-                    <option value="1+4">1 + 4 = 5 Marks</option>
-                    <option value="CUSTOM">অন্য নম্বৰ লিখক...</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="1+2">1+2</option>
+                    <option value="2+2">2+2</option>
+                    <option value="2+3">2+3</option>
+                    <option value="1+4">1+4</option>
+                    <option value="CUSTOM">অন্য নম্বৰ...</option>
                 </select>
                 <input type="text" id="marks-custom" placeholder="যেনে: 1+1+2" style="display:none; margin-top:5px;">
             </div>
@@ -264,20 +294,13 @@
                 </div>
                 <div class="meta-row">
                     <span>Subject: <span id="p-sub">Social Science</span></span>
-                    <span>Full Marks: <span id="p-total-marks">90</span></span>
+                    <span>Full Marks: <span id="p-total-marks">70</span></span>
                 </div>
             </div>
         </div>
 
-        <div id="mcq-section">
-            <div class="section-title">ক - বিভাগ / SECTION - A (বহুবিকল্পী, স্তম্ভ মিলোৱা আৰু বিবৃতি-কাৰণ প্ৰশ্ন)</div>
-            <div id="mcq-list"></div>
-        </div>
-
-        <div id="desc-section">
-            <div class="section-title">খ - বিভাগ / SECTION - B (চমু আৰু দীঘল প্ৰশ্নোত্তৰ / Descriptive Questions)</div>
-            <div id="desc-list"></div>
-        </div>
+        <!-- Dynamic Custom Sections Container -->
+        <div id="sections-container"></div>
 
         <div class="ans-box" id="ans-box">
             <h3>🔑 উত্তৰ বহী (Answer Key):</h3>
@@ -287,29 +310,20 @@
 
     <script>
         let currentBase64Img = "";
-        let autoCalculatedTotal = 0;
+        let totalSectionsMarks = 0;
 
-        let questions = JSON.parse(localStorage.getItem('gk_seba_v6_qpaper')) || [
+        // Default Pre-loaded Sections matching your example (1x25=25, 2x5=10, 3x5=15, 4x5=20)
+        let sections = JSON.parse(localStorage.getItem('gk_seba_custom_secs')) || [
+            { id: 'sec_1', title: 'Section - A (Multiple Choice Questions)', each: 1, count: 25 },
+            { id: 'sec_2', title: 'Section - B (Short Answer Questions)', each: 2, count: 5 },
+            { id: 'sec_3', title: 'Section - C (Medium Answer Questions)', each: 3, count: 5 },
+            { id: 'sec_4', title: 'Section - D (Long Answer Questions)', each: 4, count: 5 }
+        ];
+
+        // Sample Questions placed in Sections
+        let questions = JSON.parse(localStorage.getItem('gk_seba_custom_qs')) || [
             {
-                type: 'matching',
-                text: "'অ' অংশৰ লগত 'আ' অংশ মিলোৱা আৰু তলত দিয়া বিকল্পসমূহৰ পৰা শুদ্ধ উত্তৰটো বাছি উলিওৱা:",
-                textEng: "Match Column A with Column B and choose the correct option from below:",
-                colA: ["(i) বংগ বিভাজন", "(ii) অসহযোগ আন্দোলন", "(iii) আইন অমান্য আন্দোলন", "(iv) ভাৰত ত্যাগ আন্দোলন"],
-                colB: ["(a) ১৯২০ চন", "(b) ১৯৪২ চন", "(c) ১৯০৫ চন", "(d) ১৯৩০ চন"],
-                colAEng: ["Partition of Bengal", "Non-Cooperation Movement", "Civil Disobedience Movement", "Quit India Movement"],
-                colBEng: ["1920", "1942", "1905", "1930"],
-                options: [
-                    "<span class='opt-label'>(A)</span> i-c, ii-a, iii-d, iv-b",
-                    "<span class='opt-label'>(B)</span> i-a, ii-c, iii-b, iv-d",
-                    "<span class='opt-label'>(C)</span> i-c, ii-d, iii-a, iv-b",
-                    "<span class='opt-label'>(D)</span> i-b, ii-a, iii-d, iv-c"
-                ],
-                marksLabel: '1',
-                marksVal: 1,
-                ans: '(A) i-c, ii-a, iii-d, iv-b',
-                table: '', tableEng: '', img: ''
-            },
-            {
+                secId: 'sec_1',
                 type: 'mcq',
                 text: 'বংগ বিভাজন কোনজন ভাইচৰয়ৰ শাসনকালত কাৰ্যকৰী হৈছিল?',
                 textEng: 'During the reign of which Viceroy was the Partition of Bengal implemented?',
@@ -321,11 +335,62 @@
                     "<span class='opt-label'>(D)</span> লৰ্ড ডেলহাউচি / Lord Dalhousie"
                 ],
                 marksLabel: '1',
-                marksVal: 1,
                 ans: '(A) লৰ্ড কাৰ্জন / Lord Curzon',
+                table: '', tableEng: '', img: ''
+            },
+            {
+                secId: 'sec_2',
+                text: 'স্বদেশী আন্দোলনৰ যিকোনো দুটা ফলাফল উল্লেখ কৰা।',
+                textEng: 'Mention any two consequences of the Swadeshi Movement.',
+                type: 'desc',
+                colA: [], colB: [], colAEng: [], colBEng: [],
+                options: [],
+                marksLabel: '2',
+                ans: '১. জাতীয় শিক্ষাৰ প্ৰসাৰ, ২. থলুৱা উদ্যোগৰ বিকাশ।',
                 table: '', tableEng: '', img: ''
             }
         ];
+
+        function previewSecFormula() {
+            const each = parseInt(document.getElementById('new-sec-each').value) || 0;
+            const count = parseInt(document.getElementById('new-sec-count').value) || 0;
+            document.getElementById('formula-preview').innerText = `${each} × ${count} = ${each * count}`;
+        }
+
+        function addSection() {
+            const title = document.getElementById('new-sec-title').value.trim();
+            const each = parseInt(document.getElementById('new-sec-each').value) || 1;
+            const count = parseInt(document.getElementById('new-sec-count').value) || 1;
+            if (!title) {
+                alert('অনুগ্ৰহ কৰি Section-ৰ নাম লিখক (যেনে: Section - E)!');
+                return;
+            }
+            const newId = 'sec_' + Date.now();
+            sections.push({ id: newId, title, each, count });
+            document.getElementById('new-sec-title').value = '';
+            saveAndRender();
+        }
+
+        function deleteSection(secId) {
+            if (confirm('এই Section-টো আৰু ইয়াৰ ভিতৰৰ প্ৰশ্নবোৰ মচি পেলাব বিচাৰেনে?')) {
+                sections = sections.filter(s => s.id !== secId);
+                questions = questions.filter(q => q.secId !== secId);
+                saveAndRender();
+            }
+        }
+
+        function updateSectionDropdown() {
+            const sel = document.getElementById('target-sec-select');
+            const prevVal = sel.value;
+            sel.innerHTML = '';
+            sections.forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = s.id;
+                opt.innerText = `${s.title} (${s.each}×${s.count}=${s.each * s.count})`;
+                sel.appendChild(opt);
+            });
+            if (sections.some(s => s.id === prevVal)) sel.value = prevVal;
+        }
 
         async function translateText(text) {
             if (!text || !text.trim()) return "";
@@ -348,12 +413,8 @@
 
             const fields = [
                 ['q-input', 'q-input-eng'],
-                ['opt-a', 'opt-a-eng'],
-                ['opt-b', 'opt-b-eng'],
-                ['opt-c', 'opt-c-eng'],
-                ['opt-d', 'opt-d-eng'],
-                ['ar-a', 'ar-a-eng'],
-                ['ar-r', 'ar-r-eng'],
+                ['opt-a', 'opt-a-eng'], ['opt-b', 'opt-b-eng'], ['opt-c', 'opt-c-eng'], ['opt-d', 'opt-d-eng'],
+                ['ar-a', 'ar-a-eng'], ['ar-r', 'ar-r-eng'],
                 ['m-a1', 'm-a1-eng'], ['m-a2', 'm-a2-eng'], ['m-a3', 'm-a3-eng'], ['m-a4', 'm-a4-eng'],
                 ['m-b1', 'm-b1-eng'], ['m-b2', 'm-b2-eng'], ['m-b3', 'm-b3-eng'], ['m-b4', 'm-b4-eng'],
                 ['table-input', 'table-input-eng']
@@ -392,7 +453,7 @@
             document.getElementById('p-time').innerText = document.getElementById('exam-time').value;
             
             const manualMarks = document.getElementById('manual-full-marks').value.trim();
-            document.getElementById('p-total-marks').innerText = manualMarks !== '' ? manualMarks : autoCalculatedTotal;
+            document.getElementById('p-total-marks').innerText = manualMarks !== '' ? manualMarks : totalSectionsMarks;
         }
 
         function switchFormFields() {
@@ -423,11 +484,6 @@
             reader.readAsDataURL(file);
         }
 
-        function calculateMarksValue(label) {
-            const parts = label.split('+').map(n => parseInt(n.trim()) || 0);
-            return parts.reduce((a, b) => a + b, 0);
-        }
-
         function formatEnglishPrefixOption(asText, enText, letter) {
             if (!asText && !enText) return "";
             const cleanAs = asText.replace(/^\([A-Da-dঅআ]\)\s*|^[A-Da-dঅআ]\)\s*/, '').trim();
@@ -441,12 +497,16 @@
         }
 
         function addQuestion() {
+            if (sections.length === 0) {
+                alert('প্ৰথমে ওপৰত অন্ততঃ এটা Section যোগ কৰক!');
+                return;
+            }
+            const secId = document.getElementById('target-sec-select').value;
             const type = document.getElementById('q-type').value;
             const text = document.getElementById('q-input').value.trim();
             const textEng = document.getElementById('q-input-eng').value.trim();
             const mSel = document.getElementById('marks-select').value;
             const marksLabel = (mSel === 'CUSTOM') ? (document.getElementById('marks-custom').value.trim() || "1") : mSel;
-            const marksVal = calculateMarksValue(marksLabel);
             const ans = document.getElementById('q-ans').value.trim();
             const tableRaw = document.getElementById('table-input').value.trim();
             const tableEng = document.getElementById('table-input-eng').value.trim();
@@ -479,9 +539,9 @@
             const reasonEng = (type === 'assertion') ? document.getElementById('ar-r-eng').value.trim() : "";
 
             questions.push({
-                type, text, textEng, colA, colB, colAEng, colBEng,
+                secId, type, text, textEng, colA, colB, colAEng, colBEng,
                 assertion, assertionEng, reason, reasonEng,
-                options, marksLabel, marksVal, ans,
+                options, marksLabel, ans,
                 table: tableRaw, tableEng, img: currentBase64Img
             });
 
@@ -520,7 +580,9 @@
         }
 
         function saveAndRender() {
-            localStorage.setItem('gk_seba_v6_qpaper', JSON.stringify(questions));
+            localStorage.setItem('gk_seba_custom_secs', JSON.stringify(sections));
+            localStorage.setItem('gk_seba_custom_qs', JSON.stringify(questions));
+            updateSectionDropdown();
             renderPaper();
         }
 
@@ -541,78 +603,81 @@
         }
 
         function renderPaper() {
-            const mcqList = document.getElementById('mcq-list');
-            const descList = document.getElementById('desc-list');
+            const container = document.getElementById('sections-container');
             const ansList = document.getElementById('ans-list');
-            
-            mcqList.innerHTML = '';
-            descList.innerHTML = '';
+            container.innerHTML = '';
             ansList.innerHTML = '';
 
-            let totalMarks = 0;
             let qCounter = 1;
-            let hasMcq = false;
-            let hasDesc = false;
+            let calcSecTotal = 0;
 
-            questions.forEach((q, idx) => {
-                totalMarks += q.marksVal;
-                const div = document.createElement('div');
-                div.className = 'q-item';
+            sections.forEach(sec => {
+                const secMarks = sec.each * sec.count;
+                calcSecTotal += secMarks;
 
-                let extraHtml = '';
-                if (q.type === 'matching' && q.colA.length > 0) {
-                    const leftHtml = q.colA.map((item, i) => q.colAEng && q.colAEng[i] ? `${item} (${q.colAEng[i]})` : item).join('<br>');
-                    const rightHtml = q.colB.map((item, i) => q.colBEng && q.colBEng[i] ? `${item} (${q.colBEng[i]})` : item).join('<br>');
-                    extraHtml += `<div class="match-grid">
-                        <div><b>'অ' অংশ / Column A</b><br>${leftHtml}</div>
-                        <div><b>'আ' অংশ / Column B</b><br>${rightHtml}</div>
-                    </div>`;
-                }
-                if (q.type === 'assertion') {
-                    extraHtml += `<div class="ar-box">
-                        <div>${q.assertion} ${q.assertionEng ? `<br><i>${q.assertionEng}</i>` : ''}</div>
-                        <div style="margin-top:4px;">${q.reason} ${q.reasonEng ? `<br><i>${q.reasonEng}</i>` : ''}</div>
-                    </div>`;
-                }
-                if (q.table) extraHtml += buildTableHtml(q.table);
-                if (q.tableEng) extraHtml += buildTableHtml(q.tableEng);
-                if (q.img) extraHtml += `<img src="${q.img}" class="q-img" alt="Question Image">`;
-                if (q.options && q.options.length > 0) {
-                    extraHtml += `<div class="mcq-options">${q.options.map(o => `<span>${o}</span>`).join('')}</div>`;
-                }
-
-                const engLine = q.textEng ? `<span class="q-eng-text">${q.textEng}</span>` : '';
-
-                div.innerHTML = `
-                    <div class="q-top">
-                        <div class="q-text"><b>${qCounter}.</b> ${q.text} <button class="del-q-btn" onclick="deleteQuestion(${idx})">মচক</button>${engLine}</div>
-                        <div class="q-marks">[${q.marksLabel}]</div>
+                const secDiv = document.createElement('div');
+                secDiv.innerHTML = `
+                    <div class="sec-header">
+                        <span>${sec.title} <button class="del-btn" onclick="deleteSection('${sec.id}')">Section মচক</button></span>
+                        <span class="sec-formula">${sec.each} × ${sec.count} = ${secMarks}</span>
                     </div>
-                    ${extraHtml}
                 `;
 
-                if (q.type !== 'desc') {
-                    hasMcq = true;
-                    mcqList.appendChild(div);
-                } else {
-                    hasDesc = true;
-                    descList.appendChild(div);
-                }
+                const secQuestions = questions.map((q, idx) => ({ ...q, origIdx: idx })).filter(q => q.secId === sec.id);
 
-                if (q.ans) {
-                    ansList.innerHTML += `<div><b>প্ৰশ্ন ${qCounter}:</b> ${q.ans}</div>`;
-                }
-                qCounter++;
+                secQuestions.forEach(q => {
+                    const div = document.createElement('div');
+                    div.className = 'q-item';
+
+                    let extraHtml = '';
+                    if (q.type === 'matching' && q.colA.length > 0) {
+                        const leftHtml = q.colA.map((item, i) => q.colAEng && q.colAEng[i] ? `${item} (${q.colAEng[i]})` : item).join('<br>');
+                        const rightHtml = q.colB.map((item, i) => q.colBEng && q.colBEng[i] ? `${item} (${q.colBEng[i]})` : item).join('<br>');
+                        extraHtml += `<div class="match-grid">
+                            <div><b>'অ' অংশ / Column A</b><br>${leftHtml}</div>
+                            <div><b>'আ' অংশ / Column B</b><br>${rightHtml}</div>
+                        </div>`;
+                    }
+                    if (q.type === 'assertion') {
+                        extraHtml += `<div class="ar-box">
+                            <div>${q.assertion} ${q.assertionEng ? `<br><i>${q.assertionEng}</i>` : ''}</div>
+                            <div style="margin-top:4px;">${q.reason} ${q.reasonEng ? `<br><i>${q.reasonEng}</i>` : ''}</div>
+                        </div>`;
+                    }
+                    if (q.table) extraHtml += buildTableHtml(q.table);
+                    if (q.tableEng) extraHtml += buildTableHtml(q.tableEng);
+                    if (q.img) extraHtml += `<img src="${q.img}" class="q-img" alt="Question Image">`;
+                    if (q.options && q.options.length > 0) {
+                        extraHtml += `<div class="mcq-options">${q.options.map(o => `<span>${o}</span>`).join('')}</div>`;
+                    }
+
+                    const engLine = q.textEng ? `<span class="q-eng-text">${q.textEng}</span>` : '';
+
+                    div.innerHTML = `
+                        <div class="q-top">
+                            <div class="q-text"><b>${qCounter}.</b> ${q.text} <button class="del-btn" onclick="deleteQuestion(${q.origIdx})">মচক</button>${engLine}</div>
+                            <div class="q-marks">[${q.marksLabel}]</div>
+                        </div>
+                        ${extraHtml}
+                    `;
+
+                    secDiv.appendChild(div);
+
+                    if (q.ans) {
+                        ansList.innerHTML += `<div><b>Q.${qCounter}:</b> ${q.ans}</div>`;
+                    }
+                    qCounter++;
+                });
+
+                container.appendChild(secDiv);
             });
 
-            autoCalculatedTotal = totalMarks;
-            document.getElementById('mcq-section').style.display = hasMcq ? 'block' : 'none';
-            document.getElementById('desc-section').style.display = hasDesc ? 'block' : 'none';
-            document.getElementById('calc-marks').innerText = totalMarks;
+            totalSectionsMarks = calcSecTotal;
+            document.getElementById('sec-total-badge').innerText = calcSecTotal;
             updateHeader();
         }
 
-        updateHeader();
+        updateSectionDropdown();
         renderPaper();
     </script>
 </body>
