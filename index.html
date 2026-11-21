@@ -67,7 +67,7 @@
     <div class="editor-panel">
         <h2>
             <span>📝 দ্বিভাষিক SEBA প্ৰশ্নকাকত প্ৰস্তুতকাৰী (Assamese + English)</span>
-            <span style="font-size: 14px; background: #e0e7ff; color: #1e3c72; padding: 5px 10px; border-radius: 6px;">Total Marks: <span id="calc-marks">0</span></span>
+            <span style="font-size: 14px; background: #e0e7ff; color: #1e3c72; padding: 5px 10px; border-radius: 6px;">Added Marks: <span id="calc-marks">0</span></span>
         </h2>
 
         <!-- Header Details (English) -->
@@ -113,8 +113,8 @@
                 <input type="text" id="exam-time" value="3 Hours" oninput="updateHeader()">
             </div>
             <div>
-                <label>Date</label>
-                <input type="text" id="exam-date" value="25/11/2026" oninput="updateHeader()">
+                <label>Full Marks (ইয়াত লিখক)</label>
+                <input type="number" id="manual-full-marks" value="90" placeholder="Auto" oninput="updateHeader()">
             </div>
         </div>
 
@@ -264,7 +264,7 @@
                 </div>
                 <div class="meta-row">
                     <span>Subject: <span id="p-sub">Social Science</span></span>
-                    <span>Full Marks: <span id="p-total-marks">0</span></span>
+                    <span>Full Marks: <span id="p-total-marks">90</span></span>
                 </div>
             </div>
         </div>
@@ -287,8 +287,9 @@
 
     <script>
         let currentBase64Img = "";
+        let autoCalculatedTotal = 0;
 
-        let questions = JSON.parse(localStorage.getItem('gk_seba_v5_qpaper')) || [
+        let questions = JSON.parse(localStorage.getItem('gk_seba_v6_qpaper')) || [
             {
                 type: 'matching',
                 text: "'অ' অংশৰ লগত 'আ' অংশ মিলোৱা আৰু তলত দিয়া বিকল্পসমূহৰ পৰা শুদ্ধ উত্তৰটো বাছি উলিওৱা:",
@@ -389,6 +390,9 @@
             document.getElementById('p-class').innerText = document.getElementById('class-name').value;
             document.getElementById('p-sub').innerText = document.getElementById('subject-name').value;
             document.getElementById('p-time').innerText = document.getElementById('exam-time').value;
+            
+            const manualMarks = document.getElementById('manual-full-marks').value.trim();
+            document.getElementById('p-total-marks').innerText = manualMarks !== '' ? manualMarks : autoCalculatedTotal;
         }
 
         function switchFormFields() {
@@ -516,7 +520,7 @@
         }
 
         function saveAndRender() {
-            localStorage.setItem('gk_seba_v5_qpaper', JSON.stringify(questions));
+            localStorage.setItem('gk_seba_v6_qpaper', JSON.stringify(questions));
             renderPaper();
         }
 
@@ -601,10 +605,11 @@
                 qCounter++;
             });
 
+            autoCalculatedTotal = totalMarks;
             document.getElementById('mcq-section').style.display = hasMcq ? 'block' : 'none';
             document.getElementById('desc-section').style.display = hasDesc ? 'block' : 'none';
             document.getElementById('calc-marks').innerText = totalMarks;
-            document.getElementById('p-total-marks').innerText = totalMarks;
+            updateHeader();
         }
 
         updateHeader();
