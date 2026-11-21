@@ -30,19 +30,20 @@
         /* A4 Question Paper */
         .a4-paper { max-width: 920px; margin: 0 auto; background: #ffffff; padding: 30px 35px; box-shadow: 0 5px 20px rgba(0,0,0,0.12); min-height: 1120px; }
         .paper-header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 15px; }
-        .paper-header h1 { margin: 0; font-size: 20px; text-transform: uppercase; color: #000; }
+        .paper-header h1 { margin: 0; font-size: 20px; text-transform: uppercase; color: #000; font-family: Arial, sans-serif; }
         .paper-header p.sub { margin: 3px 0; font-size: 14px; font-weight: 600; color: #222; }
         
-        /* Fixed Clean 2x2 Grid for Class, Subject, Time, Full Marks */
-        .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 15px; font-size: 13.5px; font-weight: bold; margin-top: 10px; border-top: 1.5px solid #000; padding-top: 8px; text-align: left; }
-        .meta-right { text-align: right; }
+        /* Clean Single-Line English Header Grid */
+        .meta-grid { display: flex; flex-direction: column; gap: 6px; font-size: 13.5px; font-weight: bold; font-family: Arial, sans-serif; margin-top: 10px; border-top: 1.5px solid #000; padding-top: 8px; }
+        .meta-row { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .meta-row span { white-space: nowrap; }
         
         .section-title { font-size: 15px; font-weight: bold; text-decoration: underline; margin: 18px 0 12px; text-align: center; }
         .q-item { margin-bottom: 16px; font-size: 14.5px; line-height: 1.5; page-break-inside: avoid; }
         .q-top { display: flex; justify-content: space-between; align-items: flex-start; }
         .q-text { flex: 1; }
         .q-eng-text { display: block; color: #111; margin-top: 2px; font-size: 14px; }
-        .q-marks { font-weight: bold; margin-left: 15px; white-space: nowrap; }
+        .q-marks { font-weight: bold; margin-left: 15px; white-space: nowrap; font-family: Arial, sans-serif; }
         .mcq-options { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 20px; margin-top: 6px; padding-left: 18px; font-size: 13.5px; }
         .opt-label { font-weight: bold; font-family: Arial, sans-serif; }
         
@@ -66,20 +67,20 @@
     <div class="editor-panel">
         <h2>
             <span>📝 দ্বিভাষিক SEBA প্ৰশ্নকাকত প্ৰস্তুতকাৰী (Assamese + English)</span>
-            <span style="font-size: 14px; background: #e0e7ff; color: #1e3c72; padding: 5px 10px; border-radius: 6px;">মুঠ নম্বৰ: <span id="calc-marks">0</span></span>
+            <span style="font-size: 14px; background: #e0e7ff; color: #1e3c72; padding: 5px 10px; border-radius: 6px;">Total Marks: <span id="calc-marks">0</span></span>
         </h2>
 
-        <!-- Header Details -->
+        <!-- Header Details (English) -->
         <div class="grid-2">
             <div>
-                <label>প্ৰতিষ্ঠানৰ নাম (Institute / School)</label>
+                <label>Institute / School Name</label>
                 <select id="inst-select" onchange="updateHeader()">
                     <option value="GYAN KENDRA TUITION CLASSES, BOROMERA">Gyan Kendra Tuition Classes, Boromera</option>
                     <option value="GANDHIJI JATIYA BIDYALAYA, JHAPUSABARI">Gandhiji Jatiya Bidyalaya, Jhapusabari</option>
                 </select>
             </div>
             <div>
-                <label>পৰীক্ষাৰ নাম বাছনি কৰক (Select Exam Name)</label>
+                <label>Select Exam Name</label>
                 <select id="exam-select" onchange="handleExamSelect()">
                     <option value="HSLC PRE-BOARD MOCK TEST - 2026">HSLC Pre-Board Mock Test - 2026</option>
                     <option value="UNIT TEST - I (2026)">Unit Test - I</option>
@@ -87,32 +88,32 @@
                     <option value="HALF-YEARLY EXAMINATION - 2026">Half-Yearly Examination</option>
                     <option value="ANNUAL EXAMINATION - 2026">Annual Examination</option>
                     <option value="WEEKLY CLASS TEST">Weekly Class Test</option>
-                    <option value="CUSTOM">অন্য নাম লিখক (Custom)...</option>
+                    <option value="CUSTOM">Custom Exam Name...</option>
                 </select>
-                <input type="text" id="exam-custom" placeholder="ইয়াত পৰীক্ষাৰ নাম লিখক" style="display:none; margin-top:5px;" oninput="updateHeader()">
+                <input type="text" id="exam-custom" placeholder="Enter Exam Name" style="display:none; margin-top:5px;" oninput="updateHeader()">
             </div>
         </div>
 
         <div class="grid-4">
             <div>
-                <label>শ্ৰেণী (Class)</label>
+                <label>Class</label>
                 <select id="class-name" onchange="updateHeader()">
-                    <option value="Class - X">Class - X</option>
-                    <option value="Class - IX">Class - IX</option>
-                    <option value="Class - VIII">Class - VIII</option>
-                    <option value="Class - VII">Class - VII</option>
+                    <option value="X">Class - X</option>
+                    <option value="IX">Class - IX</option>
+                    <option value="VIII">Class - VIII</option>
+                    <option value="VII">Class - VII</option>
                 </select>
             </div>
             <div>
-                <label>বিষয় (Subject)</label>
-                <input type="text" id="subject-name" value="সমাজ বিজ্ঞান (Social Science)" oninput="updateHeader()">
+                <label>Subject (English)</label>
+                <input type="text" id="subject-name" value="Social Science" oninput="updateHeader()">
             </div>
             <div>
-                <label>সময় (Time)</label>
-                <input type="text" id="exam-time" value="৩ ঘণ্টা (3 Hours)" oninput="updateHeader()">
+                <label>Time (English)</label>
+                <input type="text" id="exam-time" value="3 Hours" oninput="updateHeader()">
             </div>
             <div>
-                <label>তাৰিখ (Date)</label>
+                <label>Date</label>
                 <input type="text" id="exam-date" value="25/11/2026" oninput="updateHeader()">
             </div>
         </div>
@@ -252,15 +253,19 @@
     <div class="a4-paper" id="printable-paper">
         <div class="paper-header">
             <h1 id="p-inst">GYAN KENDRA TUITION CLASSES, BOROMERA</h1>
-            <p class="sub" id="p-exam">HSLC PRE-BOARD MOCK TEST - 2026</p>
-            <p class="sub" style="font-size: 13px;">পৰিচালক: দীপাংকৰ মালী (Mali Sir)</p>
+            <p class="sub" id="p-exam" style="font-family: Arial, sans-serif;">HSLC PRE-BOARD MOCK TEST - 2026</p>
+            <p class="sub" style="font-size: 13px;">Director: Dipankar Mali (Mali Sir)</p>
             
-            <!-- Aligned 2x2 Header Meta Info -->
+            <!-- Clean Single-Line English Meta Bar -->
             <div class="meta-grid">
-                <div>শ্ৰেণী (Class): <span id="p-class">Class - X</span></div>
-                <div class="meta-right">সময় (Time): <span id="p-time">৩ ঘণ্টা (3 Hours)</span></div>
-                <div>বিষয় (Subject): <span id="p-sub">সমাজ বিজ্ঞান (Social Science)</span></div>
-                <div class="meta-right">পূৰ্ণমান (Full Marks): <span id="p-total-marks">0</span></div>
+                <div class="meta-row">
+                    <span>Class: <span id="p-class">X</span></span>
+                    <span>Time: <span id="p-time">3 Hours</span></span>
+                </div>
+                <div class="meta-row">
+                    <span>Subject: <span id="p-sub">Social Science</span></span>
+                    <span>Full Marks: <span id="p-total-marks">0</span></span>
+                </div>
             </div>
         </div>
 
@@ -283,8 +288,7 @@
     <script>
         let currentBase64Img = "";
 
-        // Fresh storage key so old cached A) items are cleared automatically
-        let questions = JSON.parse(localStorage.getItem('gk_seba_v4_qpaper')) || [
+        let questions = JSON.parse(localStorage.getItem('gk_seba_v5_qpaper')) || [
             {
                 type: 'matching',
                 text: "'অ' অংশৰ লগত 'আ' অংশ মিলোৱা আৰু তলত দিয়া বিকল্পসমূহৰ পৰা শুদ্ধ উত্তৰটো বাছি উলিওৱা:",
@@ -512,7 +516,7 @@
         }
 
         function saveAndRender() {
-            localStorage.setItem('gk_seba_v4_qpaper', JSON.stringify(questions));
+            localStorage.setItem('gk_seba_v5_qpaper', JSON.stringify(questions));
             renderPaper();
         }
 
