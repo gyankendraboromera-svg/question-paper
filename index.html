@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="as">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question Paper Generator - Mali Sir</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: 'Noto Sans Bengali', 'Segoe UI', Arial, sans-serif; background: #eef2f6; margin: 0; padding: 15px; color: #1e293b; }
+        
+        /* Control Panel Styles (Hidden during Print) */
+        .editor-panel { max-width: 850px; margin: 0 auto 25px; background: #ffffff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border-top: 5px solid #1e3c72; }
+        .editor-panel h2 { margin-top: 0; color: #1e3c72; font-size: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 12px; }
+        label { font-size: 13px; font-weight: 600; color: #475569; display: block; margin-bottom: 4px; }
+        input, select, textarea { width: 100%; padding: 9px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; font-family: inherit; }
+        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
+        button { padding: 10px 16px; border: none; border-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-add { background: #1e3c72; color: #fff; }
+        .btn-add:hover { background: #152b52; }
+        .btn-print { background: #16a34a; color: #fff; }
+        .btn-print:hover { background: #15803d; }
+        .btn-ans { background: #d97706; color: #fff; }
+        .btn-clear { background: #dc2626; color: #fff; }
+        .del-q-btn { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; padding: 2px 8px; font-size: 12px; border-radius: 4px; margin-left: 8px; cursor: pointer; }
+
+        /* A4 Question Paper Preview Styles */
+        .a4-paper { max-width: 850px; margin: 0 auto; background: #ffffff; padding: 35px 40px; box-shadow: 0 5px 20px rgba(0,0,0,0.12); min-height: 1120px; position: relative; }
+        .paper-header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 15px; }
+        .paper-header h1 { margin: 0; font-size: 22px; text-transform: uppercase; letter-spacing: 0.5px; color: #000; }
+        .paper-header p.sub { margin: 3px 0; font-size: 14px; font-weight: 600; color: #222; }
+        .meta-bar { display: flex; justify-content: space-between; font-size: 14px; font-weight: bold; margin-top: 10px; border-top: 1px solid #000; padding-top: 8px; }
+        
+        .section-title { font-size: 16px; font-weight: bold; text-decoration: underline; margin: 18px 0 10px; text-align: center; }
+        .q-item { margin-bottom: 14px; font-size: 15px; line-height: 1.5; page-break-inside: avoid; }
+        .q-top { display: flex; justify-content: space-between; align-items: flex-start; }
+        .q-text { flex: 1; }
+        .q-marks { font-weight: bold; margin-left: 15px; white-space: nowrap; }
+        .mcq-options { display: grid; grid-template-columns: 1fr 1fr; gap: 5px 20px; margin-top: 5px; padding-left: 20px; font-size: 14px; }
+        
+        .ans-box { margin-top: 30px; border-top: 2px dashed #666; padding-top: 15px; display: none; }
+        .ans-box h3 { margin: 0 0 10px; font-size: 16px; }
+
+        /* Print Media Query */
+        @media print {
+            body { background: #fff; padding: 0; }
+            .editor-panel, .del-q-btn { display: none !important; }
+            .a4-paper { box-shadow: none; padding: 10mm 12mm; margin: 0; width: 100%; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Editor / Control Panel -->
+    <div class="editor-panel">
+        <h2>
+            <span>📝 প্ৰশ্নকাকত প্ৰস্তুতকাৰী (Question Paper Builder)</span>
+            <span style="font-size: 14px; background: #e0e7ff; color: #1e3c72; padding: 5px 10px; border-radius: 6px;">মুঠ নম্বৰ: <span id="calc-marks">0</span></span>
+        </h2>
+
+        <div class="grid-2">
+            <div>
+                <label>প্ৰতিষ্ঠানৰ নাম (Institute / School)</label>
+                <select id="inst-select" onchange="updateHeader()">
+                    <option value="GYAN KENDRA TUITION CLASSES, BOROMERA">Gyan Kendra Tuition Classes, Boromera</option>
+                    <option value="GANDHIJI JATIYA BIDYALAYA, JHAPUSABARI">Gandhiji Jatiya Bidyalaya, Jhapusabari</option>
+                </select>
+            </div>
+            <div>
+                <label>পৰীক্ষাৰ নাম (Exam Name)</label>
+                <input type="text" id="exam-name" value="HSLC PRE-BOARD MOCK TEST - 2026" oninput="updateHeader()">
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div>
+                <label>শ্ৰেণী (Class)</label>
+                <input type="text" id="class-name" value="Class - X" oninput="updateHeader()">
+            </div>
+            <div>
+                <label>বিষয় (Subject)</label>
+                <input type="text" id="subject-name" value="সমাজ বিজ্ঞান (Social Science)" oninput="updateHeader()">
+            </div>
+            <div>
+                <label>সময় (Time)</label>
+                <input type="text" id="exam-time" value="১ ঘণ্টা ৩০ মিনিট" oninput="updateHeader()">
+            </div>
+            <div>
+                <label>তাৰিখ (Date)</label>
+                <input type="text" id="exam-date" value="25/11/2026" oninput="updateHeader()">
+            </div>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 15px 0;">
+
+        <!-- Add Question Form -->
+        <div class="grid-2">
+            <div>
+                <label>প্ৰশ্নৰ ধৰণ (Question Type)</label>
+                <select id="q-type" onchange="toggleMcqFields()">
+                    <option value="mcq">MCQ (বহুবিকল্পী প্ৰশ্ন)</option>
+                    <option value="desc">চমু / দীঘল প্ৰশ্ন (Descriptive)</option>
+                </select>
+            </div>
+            <div>
+                <label>নম্বৰ (Marks)</label>
+                <input type="number" id="q-marks" value="1" min="1">
+            </div>
+        </div>
+
+        <div style="margin-bottom: 10px;">
+            <label>প্ৰশ্নটো লিখক (Write Question)</label>
+            <textarea id="q-input" rows="2" placeholder="ইয়াত অসমীয়া বা ইংৰাজীত প্ৰশ্নটো লিখক..."></textarea>
+        </div>
+
+        <div id="mcq-fields" class="grid-2">
+            <input type="text" id="opt-a" placeholder="(a) বিকল্প ১">
+            <input type="text" id="opt-b" placeholder="(b) বিকল্প ২">
+            <input type="text" id="opt-c" placeholder="(c) বিকল্প ৩">
+            <input type="text" id="opt-d" placeholder="(d) বিকল্প ৪">
+        </div>
+
+        <div style="margin-top: 8px;">
+            <label>শুদ্ধ উত্তৰ (Answer Key ৰ বাবে - বৈকল্পিক)</label>
+            <input type="text" id="q-ans" placeholder="যেনে: (a) ১৯০৫ চনৰ ১৬ অক্টোবৰ">
+        </div>
+
+        <div class="btn-group">
+            <button class="btn-add" onclick="addQuestion()">➕ প্ৰশ্ন যোগ কৰক</button>
+            <button class="btn-print" onclick="window.print()">🖨️ Print / Save as PDF</button>
+            <button class="btn-ans" onclick="toggleAnswers()">🔑 Answer Key চাওক/লুকুৱাওক</button>
+            <button class="btn-clear" onclick="clearAll()">🗑️ সকলো মচক</button>
+        </div>
+    </div>
+
+    <!-- A4 Printable Question Paper -->
+    <div class="a4-paper" id="printable-paper">
+        <div class="paper-header">
+            <h1 id="p-inst">GYAN KENDRA TUITION CLASSES, BOROMERA</h1>
+            <p class="sub" id="p-exam">HSLC PRE-BOARD MOCK TEST - 2026</p>
+            <p class="sub" style="font-size: 13px;">পৰিচালক: দীপাংকৰ মালী (Mali Sir)</p>
+            <div class="meta-bar">
+                <span>শ্ৰেণী: <span id="p-class">Class - X</span></span>
+                <span>বিষয়: <span id="p-sub">সমাজ বিজ্ঞান (Social Science)</span></span>
+                <span>সময়: <span id="p-time">১ ঘণ্টা ৩০ মিনিট</span></span>
+                <span>পূৰ্ণমান: <span id="p-total-marks">0</span></span>
+            </div>
+        </div>
+
+        <div id="mcq-section">
+            <div class="section-title">ক - বিভাগ (বহুবিকল্পী প্ৰশ্ন / Multiple Choice Questions)</div>
+            <div id="mcq-list"></div>
+        </div>
+
+        <div id="desc-section">
+            <div class="section-title">খ - বিভাগ (চমু আৰু দীঘল প্ৰশ্নোত্তৰ / Descriptive Questions)</div>
+            <div id="desc-list"></div>
+        </div>
+
+        <div class="ans-box" id="ans-box">
+            <h3>🔑 উত্তৰ বহী (Answer Key):</h3>
+            <div id="ans-list" style="font-size: 14px; line-height: 1.6;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Pre-loaded Demo Questions for SEBA Class X Social Science
+        let questions = JSON.parse(localStorage.getItem('gk_qpaper')) || [
+            {
+                type: 'mcq',
+                text: 'বংগ বিভাজন কোনজন ভাইচৰয়ৰ শাসনকালত কাৰ্যকৰী হৈছিল?',
+                options: ['(a) লৰ্ড কাৰ্জন', '(b) লৰ্ড মিণ্টো', '(c) লৰ্ড মাউণ্টবেটেন', '(d) লৰ্ড ডেলহাউচি'],
+                marks: 1,
+                ans: '(a) লৰ্ড কাৰ্জন'
+            },
+            {
+                type: 'mcq',
+                text: 'অসমৰ আটাইতকৈ পুৰণি তেল শোধনাগাৰটো ক’ত অৱস্থিত?',
+                options: ['(a) নুনমাটি', '(b) নুমলীগড়', '(c) ডিগবৈ', '(d) বঙাইগাঁও'],
+                marks: 1,
+                ans: '(c) ডিগবৈ'
+            },
+            {
+                type: 'mcq',
+                text: 'ৰাষ্ট্ৰসংঘ দিৱস প্ৰতি বছৰে কোন তাৰিখে পালন কৰা হয়?',
+                options: ['(a) ১০ ডিচেম্বৰ', '(b) ২৪ অক্টোবৰ', '(c) ৫ জুন', '(d) ১৫ আগষ্ট'],
+                marks: 1,
+                ans: '(b) ২৪ অক্টোবৰ'
+            },
+            {
+                type: 'desc',
+                text: 'স্বদেশী আন্দোলনৰ যিকোনো তিনিটা ফলাফল উল্লেখ কৰা।',
+                marks: 3,
+                ans: '১. জাতীয় শিক্ষাৰ প্ৰসাৰ, ২. থলুৱা উদ্যোগৰ বিকাশ, ৩. মহিলাৰ সক্ৰিয় অংশগ্ৰহণ।'
+            },
+            {
+                type: 'desc',
+                text: 'অসমৰ অৰ্থনৈতিক উন্নয়নত পৰিবহণ ব্যৱস্থাৰ ভূমিকা চমুকৈ আলোচনা কৰা।',
+                marks: 4,
+                ans: 'কেঁচামাল সৰবৰাহ, বজাৰ সংযোগ আৰু পৰ্যটন উদ্যোগৰ বিকাশত পৰিবহণৰ ভূমিকা অপৰিসীম।'
+            }
+        ];
+
+        function updateHeader() {
+            document.getElementById('p-inst').innerText = document.getElementById('inst-select').value;
+            document.getElementById('p-exam').innerText = document.getElementById('exam-name').value;
+            document.getElementById('p-class').innerText = document.getElementById('class-name').value;
+            document.getElementById('p-sub').innerText = document.getElementById('subject-name').value;
+            document.getElementById('p-time').innerText = document.getElementById('exam-time').value;
+        }
+
+        function toggleMcqFields() {
+            const type = document.getElementById('q-type').value;
+            document.getElementById('mcq-fields').style.display = (type === 'mcq') ? 'grid' : 'none';
+            document.getElementById('q-marks').value = (type === 'mcq') ? 1 : 2;
+        }
+
+        function addQuestion() {
+            const type = document.getElementById('q-type').value;
+            const text = document.getElementById('q-input').value.trim();
+            const marks = parseInt(document.getElementById('q-marks').value) || 1;
+            const ans = document.getElementById('q-ans').value.trim();
+
+            if (!text) {
+                alert('অনুগ্ৰহ কৰি প্ৰশ্নটো লিখক!');
+                return;
+            }
+
+            let options = [];
+            if (type === 'mcq') {
+                const a = document.getElementById('opt-a').value.trim();
+                const b = document.getElementById('opt-b').value.trim();
+                const c = document.getElementById('opt-c').value.trim();
+                const d = document.getElementById('opt-d').value.trim();
+                if (!a || !b || !c || !d) {
+                    alert('অনুগ্ৰহ কৰি চাৰিওটা বিকল্প (a, b, c, d) লিখক!');
+                    return;
+                }
+                options = [`(a) ${a}`, `(b) ${b}`, `(c) ${c}`, `(d) ${d}`];
+            }
+
+            questions.push({ type, text, options, marks, ans });
+            saveAndRender();
+
+            // Clear inputs
+            document.getElementById('q-input').value = '';
+            document.getElementById('opt-a').value = '';
+            document.getElementById('opt-b').value = '';
+            document.getElementById('opt-c').value = '';
+            document.getElementById('opt-d').value = '';
+            document.getElementById('q-ans').value = '';
+        }
+
+        function deleteQuestion(index) {
+            questions.splice(index, 1);
+            saveAndRender();
+        }
+
+        function clearAll() {
+            if (confirm('আপুনি সকলো প্ৰশ্ন মচি পেলাব বিচাৰেনে?')) {
+                questions = [];
+                saveAndRender();
+            }
+        }
+
+        function toggleAnswers() {
+            const box = document.getElementById('ans-box');
+            box.style.display = (box.style.display === 'block') ? 'none' : 'block';
+        }
+
+        function saveAndRender() {
+            localStorage.setItem('gk_qpaper', JSON.stringify(questions));
+            renderPaper();
+        }
+
+        function renderPaper() {
+            const mcqList = document.getElementById('mcq-list');
+            const descList = document.getElementById('desc-list');
+            const ansList = document.getElementById('ans-list');
+            
+            mcqList.innerHTML = '';
+            descList.innerHTML = '';
+            ansList.innerHTML = '';
+
+            let totalMarks = 0;
+            let qCounter = 1;
+            let hasMcq = false;
+            let hasDesc = false;
+
+            questions.forEach((q, idx) => {
+                totalMarks += q.marks;
+                const div = document.createElement('div');
+                div.className = 'q-item';
+
+                let optHtml = '';
+                if (q.type === 'mcq') {
+                    hasMcq = true;
+                    optHtml = `<div class="mcq-options">${q.options.map(o => `<span>${o}</span>`).join('')}</div>`;
+                } else {
+                    hasDesc = true;
+                }
+
+                div.innerHTML = `
+                    <div class="q-top">
+                        <div class="q-text"><b>${qCounter}.</b> ${q.text} <button class="del-q-btn" onclick="deleteQuestion(${idx})">মচক</button></div>
+                        <div class="q-marks">[${q.marks}]</div>
+                    </div>
+                    ${optHtml}
+                `;
+
+                if (q.type === 'mcq') mcqList.appendChild(div);
+                else descList.appendChild(div);
+
+                if (q.ans) {
+                    ansList.innerHTML += `<div><b>প্ৰশ্ন ${qCounter}:</b> ${q.ans}</div>`;
+                }
+                qCounter++;
+            });
+
+            document.getElementById('mcq-section').style.display = hasMcq ? 'block' : 'none';
+            document.getElementById('desc-section').style.display = hasDesc ? 'block' : 'none';
+            document.getElementById('calc-marks').innerText = totalMarks;
+            document.getElementById('p-total-marks').innerText = totalMarks;
+        }
+
+        updateHeader();
+        renderPaper();
+    </script>
+</body>
+</html>
