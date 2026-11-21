@@ -41,6 +41,7 @@
         .q-eng-text { display: block; color: #111; margin-top: 2px; font-size: 14px; }
         .q-marks { font-weight: bold; margin-left: 15px; white-space: nowrap; }
         .mcq-options { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 20px; margin-top: 6px; padding-left: 20px; font-size: 13.5px; }
+        .opt-label { font-weight: bold; font-family: Arial, sans-serif; }
         
         .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 8px 0 8px 20px; padding: 8px; border: 1px solid #000; font-size: 13.5px; }
         .q-table { width: 95%; margin: 8px 0 8px 20px; border-collapse: collapse; font-size: 13.5px; }
@@ -121,7 +122,7 @@
                 <label>প্ৰশ্নৰ ধৰণ বাছনি কৰক (Question Format)</label>
                 <select id="q-type" onchange="switchFormFields()">
                     <option value="mcq">১. সাধাৰণ MCQ (A, B, C, D)</option>
-                    <option value="matching">২. 'অ' অংশৰ লগত 'আ' অংশ মিলোৱা (Matching)</option>
+                    <option value="matching">২. 'অ' অংশৰ লগত 'আ' অংশ মিলোৱা (Matching + A, B, C, D)</option>
                     <option value="assertion">৩. বিবৃতি আৰু কাৰণ (Assertion & Reasoning)</option>
                     <option value="desc">৪. চমু / দীঘল প্ৰশ্ন (2, 3, 4, 5 Marks বা 1+2)</option>
                 </select>
@@ -144,11 +145,11 @@
             </div>
         </div>
 
-        <!-- Main Question Input (Assamese + Auto English) -->
+        <!-- Main Question Input -->
         <div style="margin-bottom: 10px;">
             <label>মূল প্ৰশ্নটো অসমীয়াত লিখক (Write Question in Assamese):</label>
             <textarea id="q-input" rows="2" placeholder="ইয়াত অসমীয়াত প্ৰশ্নটো লিখক..."></textarea>
-            <input type="text" id="q-input-eng" class="eng-input" placeholder="English Translation (অনুবাদ বুটাম টিপিলে ইয়াত নিজেই আহিব, বা নিজে লিখিব পাৰে)">
+            <input type="text" id="q-input-eng" class="eng-input" placeholder="English Translation (অনুবাদ বুটাম টিপিলে ইয়াত নিজেই আহিব)">
         </div>
 
         <!-- Matching Columns Input -->
@@ -186,32 +187,32 @@
 
         <!-- Assertion & Reasoning Input -->
         <div id="ar-fields" class="sub-box" style="display:none;">
-            <label>বিবৃতি (Assertion) আৰু কাৰণ (Reason) অসমীয়াত লিখক:</label>
+            <label>বিবৃতি Assertion (A) আৰু কাৰণ Reason (R) লিখক:</label>
             <input type="text" id="ar-a" placeholder="বিবৃতি (A): ইয়াত বিবৃতিটো লিখক..." style="margin-bottom:4px;">
             <input type="text" id="ar-a-eng" class="eng-input" placeholder="Assertion (A) in English..." style="margin-bottom:8px;">
             <input type="text" id="ar-r" placeholder="কাৰণ (R): ইয়াত কাৰণটো লিখক..." style="margin-bottom:4px;">
             <input type="text" id="ar-r-eng" class="eng-input" placeholder="Reason (R) in English...">
         </div>
 
-        <!-- A, B, C, D Options -->
+        <!-- Fixed English Options A, B, C, D -->
         <div id="abcd-fields" class="sub-box">
-            <label>বিকল্পসমূহ অসমীয়াত লিখক (A, B, C, D):</label>
+            <label>বিকল্পসমূহ লিখক — অপচনৰ আখৰ সদায় ইংৰাজীত (A), (B), (C), (D) থাকিব:</label>
             <div class="grid-2">
                 <div>
-                    <input type="text" id="opt-a" placeholder="A) বিকল্প ১ (অসমীয়া)">
-                    <input type="text" id="opt-a-eng" class="eng-input" placeholder="A) Option 1 (English)">
+                    <input type="text" id="opt-a" placeholder="(A) বিকল্প ১ (যেনে: i, iii, iv, ii বা অসমীয়া)">
+                    <input type="text" id="opt-a-eng" class="eng-input" placeholder="(A) Option 1 (English)">
                 </div>
                 <div>
-                    <input type="text" id="opt-b" placeholder="B) বিকল্প ২ (অসমীয়া)">
-                    <input type="text" id="opt-b-eng" class="eng-input" placeholder="B) Option 2 (English)">
+                    <input type="text" id="opt-b" placeholder="(B) বিকল্প ২ (যেনে: ii, i, iii, iv বা অসমীয়া)">
+                    <input type="text" id="opt-b-eng" class="eng-input" placeholder="(B) Option 2 (English)">
                 </div>
                 <div>
-                    <input type="text" id="opt-c" placeholder="C) বিকল্প ৩ (অসমীয়া)">
-                    <input type="text" id="opt-c-eng" class="eng-input" placeholder="C) Option 3 (English)">
+                    <input type="text" id="opt-c" placeholder="(C) বিকল্প ৩ (যেনে: i, iii, ii, iv বা অসমীয়া)">
+                    <input type="text" id="opt-c-eng" class="eng-input" placeholder="(C) Option 3 (English)">
                 </div>
                 <div>
-                    <input type="text" id="opt-d" placeholder="D) বিকল্প ৪ (অসমীয়া)">
-                    <input type="text" id="opt-d-eng" class="eng-input" placeholder="D) Option 4 (English)">
+                    <input type="text" id="opt-d" placeholder="(D) বিকল্প ৪ (যেনে: ii, iii, iv, i বা অসমীয়া)">
+                    <input type="text" id="opt-d-eng" class="eng-input" placeholder="(D) Option 4 (English)">
                 </div>
             </div>
         </div>
@@ -232,7 +233,7 @@
 
         <div>
             <label>শুদ্ধ উত্তৰ (Answer Key ৰ বাবে - বৈকল্পিক)</label>
-            <input type="text" id="q-ans" placeholder="যেনে: A) i-c, ii-a, iii-d, iv-b">
+            <input type="text" id="q-ans" placeholder="যেনে: (A) i, iii, iv, ii">
         </div>
 
         <div class="btn-group">
@@ -277,34 +278,49 @@
     <script>
         let currentBase64Img = "";
 
-        // Pre-loaded Bilingual Demo Questions
-        let questions = JSON.parse(localStorage.getItem('gk_seba_bilingual_qpaper')) || [
+        // Pre-loaded Demo Questions with English (A), (B), (C), (D) Options
+        let questions = JSON.parse(localStorage.getItem('gk_seba_en_opt_qpaper')) || [
+            {
+                type: 'matching',
+                text: "'অ' অংশৰ লগত 'আ' অংশ মিলোৱা আৰু তলত দিয়া বিকল্পসমূহৰ পৰা শুদ্ধ উত্তৰটো বাছি উলিওৱা:",
+                textEng: "Match Column A with Column B and choose the correct option from below:",
+                colA: ["(i) বংগ বিভাজন", "(ii) অসহযোগ আন্দোলন", "(iii) আইন অমান্য আন্দোলন", "(iv) ভাৰত ত্যাগ আন্দোলন"],
+                colB: ["(a) ১৯২০ চন", "(b) ১৯৪২ চন", "(c) ১৯০৫ চন", "(d) ১৯৩০ চন"],
+                colAEng: ["Partition of Bengal", "Non-Cooperation Movement", "Civil Disobedience Movement", "Quit India Movement"],
+                colBEng: ["1920", "1942", "1905", "1930"],
+                options: [
+                    "<span class='opt-label'>(A)</span> i-c, ii-a, iii-d, iv-b",
+                    "<span class='opt-label'>(B)</span> i-a, ii-c, iii-b, iv-d",
+                    "<span class='opt-label'>(C)</span> i-c, ii-d, iii-a, iv-b",
+                    "<span class='opt-label'>(D)</span> i-b, ii-a, iii-d, iv-c"
+                ],
+                marksLabel: '1',
+                marksVal: 1,
+                ans: '(A) i-c, ii-a, iii-d, iv-b',
+                table: '', tableEng: '', img: ''
+            },
             {
                 type: 'mcq',
                 text: 'বংগ বিভাজন কোনজন ভাইচৰয়ৰ শাসনকালত কাৰ্যকৰী হৈছিল?',
                 textEng: 'During the reign of which Viceroy was the Partition of Bengal implemented?',
                 colA: [], colB: [], colAEng: [], colBEng: [],
-                options: ['A) লৰ্ড কাৰ্জন / Lord Curzon', 'B) লৰ্ড মিণ্টো / Lord Minto', 'C) লৰ্ড মাউণ্টবেটেন / Lord Mountbatten', 'D) লৰ্ড ডেলহাউচি / Lord Dalhousie'],
+                options: [
+                    "<span class='opt-label'>(A)</span> লৰ্ড কাৰ্জন / Lord Curzon",
+                    "<span class='opt-label'>(B)</span> লৰ্ড মিণ্টো / Lord Minto",
+                    "<span class='opt-label'>(C)</span> লৰ্ড মাউণ্টবেটেন / Lord Mountbatten",
+                    "<span class='opt-label'>(D)</span> লৰ্ড ডেলহাউচি / Lord Dalhousie"
+                ],
                 marksLabel: '1',
                 marksVal: 1,
-                ans: 'A) লৰ্ড কাৰ্জন / Lord Curzon',
-                table: '', tableEng: '', img: ''
-            },
-            {
-                type: 'desc',
-                text: 'স্বদেশী আন্দোলনৰ সময়ত গঢ় লৈ উঠা যিকোনো এটা জাতীয় শিক্ষানুষ্ঠানৰ নাম লিখা আৰু এই আন্দোলনৰ দুটা ফলাফল উল্লেখ কৰা।',
-                textEng: 'Name any one national educational institution established during the Swadeshi Movement and mention two consequences of this movement.',
-                colA: [], colB: [], colAEng: [], colBEng: [],
-                options: [],
-                marksLabel: '1+2',
-                marksVal: 3,
-                ans: 'বেংগল নেচনেল কলেজ (Bengal National College)।',
+                ans: '(A) লৰ্ড কাৰ্জন / Lord Curzon',
                 table: '', tableEng: '', img: ''
             }
         ];
 
         async function translateText(text) {
             if (!text || !text.trim()) return "";
+            // Skip translation if text only contains Roman numerals/codes like "i, iii, iv, ii"
+            if (/^[a-zA-Z0-9\s,.\-()]+$/.test(text.trim())) return "";
             try {
                 const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=as&tl=en&dt=t&q=${encodeURIComponent(text)}`;
                 const res = await fetch(url);
@@ -400,12 +416,17 @@
             return parts.reduce((a, b) => a + b, 0);
         }
 
-        function formatOptionPair(asText, enText, prefix) {
+        // Ensures option prefix is ALWAYS English (A), (B), (C), (D)
+        function formatEnglishPrefixOption(asText, enText, letter) {
             if (!asText && !enText) return "";
-            if (asText && enText && asText.toLowerCase() !== enText.toLowerCase()) {
-                return `${prefix}) ${asText} / ${enText}`;
+            const cleanAs = asText.replace(/^\([A-Da-dঅআ]\)\s*|^[A-Da-dঅআ]\)\s*/, '').trim();
+            const cleanEn = enText.replace(/^\([A-Da-d]\)\s*|^[A-Da-d]\)\s*/, '').trim();
+            const prefix = `<span class="opt-label">(${letter})</span>`;
+            
+            if (cleanAs && cleanEn && cleanAs.toLowerCase() !== cleanEn.toLowerCase()) {
+                return `${prefix} ${cleanAs} / ${cleanEn}`;
             }
-            return `${prefix}) ${asText || enText}`;
+            return `${prefix} ${cleanAs || cleanEn}`;
         }
 
         function addQuestion() {
@@ -426,10 +447,10 @@
 
             let options = [];
             if (type !== 'desc') {
-                const a = formatOptionPair(document.getElementById('opt-a').value.trim(), document.getElementById('opt-a-eng').value.trim(), 'A');
-                const b = formatOptionPair(document.getElementById('opt-b').value.trim(), document.getElementById('opt-b-eng').value.trim(), 'B');
-                const c = formatOptionPair(document.getElementById('opt-c').value.trim(), document.getElementById('opt-c-eng').value.trim(), 'C');
-                const d = formatOptionPair(document.getElementById('opt-d').value.trim(), document.getElementById('opt-d-eng').value.trim(), 'D');
+                const a = formatEnglishPrefixOption(document.getElementById('opt-a').value, document.getElementById('opt-a-eng').value, 'A');
+                const b = formatEnglishPrefixOption(document.getElementById('opt-b').value, document.getElementById('opt-b-eng').value, 'B');
+                const c = formatEnglishPrefixOption(document.getElementById('opt-c').value, document.getElementById('opt-c-eng').value, 'C');
+                const d = formatEnglishPrefixOption(document.getElementById('opt-d').value, document.getElementById('opt-d-eng').value, 'D');
                 options = [a, b, c, d].filter(Boolean);
             }
 
@@ -488,7 +509,7 @@
         }
 
         function saveAndRender() {
-            localStorage.setItem('gk_seba_bilingual_qpaper', JSON.stringify(questions));
+            localStorage.setItem('gk_seba_en_opt_qpaper', JSON.stringify(questions));
             renderPaper();
         }
 
